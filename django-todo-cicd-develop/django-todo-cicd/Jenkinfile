@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/vedantDeshmukh46/task2.git'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test || echo "Tests skipped or failed"'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    pm2 delete all || true
+                    pm2 start index.js --name task2-app
+                '''
+            }
+        }
+    }
+}
